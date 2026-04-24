@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserProfile {
+  id             String        @id @default(cuid())
+  sessionId      String        @unique
+  tasteVector    Json
+  totalPlays     Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  listeningEvents ListeningEvent[]
+}
+
+model ListeningEvent {
+  id            String      @id @default(cuid())
+  userProfileId String
+  songTitle     String
+  artist        String
+  youtubeVideoId String
+  channelTitle  String
+  listenedMs    Int         @default(0)
+  eventType     EventType
+  createdAt     DateTime    @default(now())
+  userProfile   UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  @@index([userProfileId, createdAt])
+}
+
+enum EventType {
+  play
+  complete
+  skip
+  like
+}
