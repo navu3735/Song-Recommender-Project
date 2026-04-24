@@ -1,41 +1,33 @@
-# Pulseify - Song Recommendation System
+# Pulseify — Intelligent Song Recommendation System
 
-End-to-end Spotify-inspired recommendation app with:
+Pulseify is a full-stack, Spotify-inspired music recommendation platform that learns user preferences over time and delivers personalized song suggestions.
 
-- YouTube search + playback
-- Adaptive user taste learning over time
-- PostgreSQL persistence
-- AI-style ranking from listening behavior
+## 🚀 Features
 
-## 1) Environment
+- 🎧 YouTube search and playback integration  
+- 🧠 Adaptive taste learning based on user behavior  
+- 📊 AI-style ranking system for recommendations  
+- 🗄️ PostgreSQL database for persistent storage  
+- ⚡ Real-time interaction tracking (play, skip, like, complete)
 
-You already have `.env`, but make sure it contains:
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js (App Router), React, Tailwind CSS  
+- **Backend:** Node.js, API Routes  
+- **Database:** PostgreSQL (Prisma ORM)  
+- **APIs:** YouTube Data API  
+
+---
+
+## ⚙️ Setup
+
+### 1. Environment Variables
+
+Create a `.env` file:
 
 ```env
 DATABASE_URL="postgresql://..."
 YOUTUBE_API_KEY="..."
 NEXT_PUBLIC_APP_NAME="Pulseify"
-```
-
-## 2) Install + database
-
-```bash
-npm install
-npm run prisma:generate
-npm run prisma:push
-```
-
-## 3) Run
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000`.
-
-## How learning works
-
-- Every play/skip/complete/like is recorded in PostgreSQL.
-- The backend updates a user taste vector from song title/artist/channel tokens.
-- Future recommendations are scored based on similarity to that learned vector.
-- Session identity is stored in browser localStorage, so behavior adapts over time for that user.
