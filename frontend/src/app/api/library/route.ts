@@ -65,8 +65,20 @@ export async function POST(request: Request) {
     );
 
     const terms = topTasteTerms((profile.tasteVector as TasteVector) ?? {}, 6);
-    const baseSeed = completeEvents[0]?.songTitle ?? likedEvents[0]?.songTitle ?? terms[0] ?? "top hits";
-    const artistSeed = completeEvents[0]?.artist ?? likedEvents[0]?.artist ?? terms[1] ?? "indie";
+
+    // If no history exists, return empty lists to ensure total privacy for new sessions
+    if (events.length === 0 && terms.length === 0) {
+      return NextResponse.json({
+        likedSongs: [],
+        recentlyPlayed: [],
+        discoverWeekly: [],
+        djRadio: [],
+        focusMix: []
+      });
+    }
+
+    const baseSeed = completeEvents[0]?.songTitle ?? likedEvents[0]?.songTitle ?? terms[0] ?? "music";
+    const artistSeed = completeEvents[0]?.artist ?? likedEvents[0]?.artist ?? terms[1] ?? "hits";
 
     const [discoverWeekly, djRadio, focusMix] = await Promise.all([
       searchYouTubeSongs(`${baseSeed} weekly mix songs`),

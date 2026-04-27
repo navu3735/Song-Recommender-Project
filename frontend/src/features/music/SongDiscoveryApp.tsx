@@ -319,6 +319,22 @@ export function SongDiscoveryApp() {
             </button>
           ))}
         </div>
+
+        <div className="nav-footer" style={{ marginTop: "auto", paddingTop: "20px" }}>
+          <button 
+            className="nav-link" 
+            style={{ width: "100%", opacity: 0.6 }}
+            onClick={() => {
+              if (confirm("Reset your session? This will clear your history on this device.")) {
+                localStorage.removeItem(sessionKey);
+                window.location.reload();
+              }
+            }}
+          >
+            <X size={18} />
+            <span>Reset Session</span>
+          </button>
+        </div>
       </nav>
 
       <section className="content-panel">
