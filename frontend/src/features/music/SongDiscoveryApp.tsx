@@ -416,14 +416,55 @@ export function SongDiscoveryApp() {
         </section>
       </aside>
 
+      {current && (
+        <div className="mobile-player-bar" onClick={() => setFullScreenPlayer(true)}>
+          <div className="list-item" style={{ padding: 0, border: 0, background: 'none' }}>
+            <img src={current.thumbnailUrl} alt={current.title} style={{ width: 40, height: 40 }} />
+            <div className="list-item-info" style={{ maxWidth: '120px' }}>
+              <strong>{current.title}</strong>
+              <small>{current.artist}</small>
+            </div>
+          </div>
+          <div className="player-controls" onClick={(e) => e.stopPropagation()} style={{ gap: 12 }}>
+            <button onClick={togglePlayback}>
+              {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
+            </button>
+            <button onClick={playNext}>
+              <SkipForward size={20} fill="currentColor" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {fullScreenPlayer && current && (
         <div className="fullscreen-player">
           <button className="close-button" onClick={() => setFullScreenPlayer(false)}><X size={32} /></button>
           <div className="fullscreen-meta">
             <img src={current.thumbnailUrl} alt={current.title} />
-            <div>
+            <div style={{ width: '100%' }}>
               <h2>{current.title}</h2>
-              <p>{current.artist}</p>
+              <p style={{ fontSize: '24px', color: 'var(--muted)', marginBottom: '32px' }}>{current.artist}</p>
+              
+              <div className="progress-area" style={{ marginBottom: '40px' }}>
+                <div className="progress-track" onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  seekTo(((e.clientX - rect.left) / rect.width) * 100);
+                }} style={{ height: '6px' }}>
+                  <span style={{ width: `${(progressSec / (durationSec || 1)) * 100}%` }} />
+                </div>
+                <div className="time-row" style={{ fontSize: '14px', marginTop: '12px' }}>
+                  <span>{formatTime(progressSec)}</span>
+                  <span>{formatTime(durationSec)}</span>
+                </div>
+              </div>
+
+              <div className="player-controls" style={{ gap: '48px' }}>
+                <button onClick={playPrevious}><SkipBack size={40} fill="currentColor" /></button>
+                <button className="play-button" onClick={togglePlayback} style={{ width: '80px', height: '80px' }}>
+                  {isPlaying ? <Pause size={40} fill="currentColor" /> : <Play size={40} fill="currentColor" className="ml-1" />}
+                </button>
+                <button onClick={playNext}><SkipForward size={40} fill="currentColor" /></button>
+              </div>
             </div>
           </div>
         </div>
