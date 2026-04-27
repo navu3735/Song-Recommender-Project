@@ -1,6 +1,7 @@
 # Pulseify - Intelligent Song Recommendation System
 
 Pulseify is a full-stack, Spotify-inspired music recommendation platform that learns user preferences over time and delivers personalized song suggestions.
+https://pulsify-one.vercel.app/
 
 ## Project Structure
 
