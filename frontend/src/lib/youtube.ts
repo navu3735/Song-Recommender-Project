@@ -46,7 +46,7 @@ export async function searchYouTubeSongs(query: string): Promise<YouTubeSong[]> 
   const params = new URLSearchParams({
     part: "snippet",
     q: `${query} official audio`,
-    maxResults: "10",
+    maxResults: "15",
     type: "video",
     videoCategoryId: "10",
     key: apiKey

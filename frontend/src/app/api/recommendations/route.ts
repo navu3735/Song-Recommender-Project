@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { diversifyByArtist, scoreCandidates, similarityScore, topTasteTerms } from "@/lib/recommender";
+import { buildUpcomingQueue, diversifyByArtist, scoreCandidates, topTasteTerms } from "@/lib/recommender";
 import { searchYouTubeSongs } from "@/lib/youtube";
 import type { TasteVector } from "@/lib/types";
 
@@ -46,11 +46,14 @@ export async function POST(request: Request) {
       body.seed,
       `${body.seed} radio`,
       `${body.seed} similar songs`,
+      `${body.seed} song recommendations`,
+      `${body.seed} fans also like`,
       tasteTerms.length ? `${tasteTerms.join(" ")} playlist` : "",
+      tasteTerms.length ? `${tasteTerms.slice(0, 4).join(" ")} new songs` : "",
       tasteTerms.length ? `${tasteTerms.slice(0, 3).join(" ")} mix` : ""
     ].filter(Boolean);
 
-    const queries = body.mode === "dj" ? expandedSeeds : expandedSeeds.slice(0, 3);
+    const queries = body.mode === "dj" ? expandedSeeds.slice(0, 6) : expandedSeeds.slice(0, 4);
     const candidateBuckets = await Promise.all(queries.map((query) => searchYouTubeSongs(query)));
 
     const unique = new Map<string, (typeof candidateBuckets)[number][number]>();
@@ -59,22 +62,15 @@ export async function POST(request: Request) {
       unique.set(song.videoId, song);
     });
 
-    const reranked = scoreCandidates([...unique.values()], tasteVector).map((song) => {
-      const artistKey = song.artist.toLowerCase();
-      const artistSeenPenalty = recentArtists.has(artistKey) ? 0.35 : 0;
-      const skipPenalty = (skipCounts[artistKey] ?? 0) * 0.7;
-      const similarityBoost = body.currentSong
-        ? similarityScore(body.currentSong, {
-            title: song.title,
-            artist: song.artist,
-            channelTitle: song.channelTitle
-          }) * 2.25
-        : 0;
-      return { ...song, score: song.score - artistSeenPenalty - skipPenalty + similarityBoost };
+    const reranked = scoreCandidates([...unique.values()], tasteVector, {
+      currentSong: body.currentSong,
+      recentArtists,
+      skipCounts
     });
 
-    const ranked = diversifyByArtist(reranked.sort((a, b) => b.score - a.score), 1).slice(0, body.mode === "dj" ? 20 : 12);
-    return NextResponse.json({ recommendations: ranked });
+    const ranked = diversifyByArtist(reranked, body.mode === "dj" ? 2 : 1).slice(0, body.mode === "dj" ? 24 : 14);
+    const upNext = buildUpcomingQueue(ranked, body.currentSong, body.mode === "dj" ? 10 : 8);
+    return NextResponse.json({ recommendations: ranked, upNext });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to get recommendations" },

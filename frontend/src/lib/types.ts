@@ -7,4 +7,5 @@ export type SongCandidate = {
   videoId: string;
   thumbnailUrl: string;
   score: number;
+  reason?: string;
 };
