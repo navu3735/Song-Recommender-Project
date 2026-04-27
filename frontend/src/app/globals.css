@@ -92,17 +92,38 @@ button {
 @media (max-width: 1024px) {
   .app-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    padding: 8px;
-    gap: 8px;
+    grid-template-rows: auto 1fr;
+    padding: 0;
+    gap: 0;
     height: 100dvh;
     overflow: hidden;
   }
 
   .app-header {
-    grid-template-columns: 1fr;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    padding: 12px 16px;
     gap: 12px;
-    padding: 12px;
+    background: rgba(5, 6, 8, 0.8);
+  }
+
+  .brand-mark {
+    justify-content: space-between;
+  }
+
+  .brand-mark p {
+    display: none;
+  }
+
+  .search-row {
+    max-width: none;
+    width: 100%;
   }
 
   .side-nav {
@@ -119,6 +140,7 @@ button {
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
+    border-top: 1px solid var(--line);
   }
 
   .nav-stack {
@@ -146,28 +168,42 @@ button {
   }
 
   .content-panel {
-    margin-bottom: 70px; /* Space for bottom nav */
+    margin-bottom: 70px;
+    border-radius: 0;
+    border: 0;
   }
 
-  .right-rail {
-    display: none;
+  .hero-player {
+    padding: 40px 20px !important;
+    min-height: 200px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .track-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+  
+  .track-card {
+    padding: 12px !important;
   }
 
   .mobile-player-bar {
     position: fixed;
     bottom: 70px;
-    left: 8px;
-    right: 8px;
+    left: 0;
+    right: 0;
     background: var(--surface);
     backdrop-filter: blur(var(--blur));
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
+    border-top: 1px solid var(--line-strong);
+    border-radius: 0;
     padding: 8px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 40;
-    box-shadow: var(--shadow);
+    z-index: 45;
   }
 }
 

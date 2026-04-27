@@ -338,13 +338,22 @@ export function SongDiscoveryApp() {
       </nav>
 
       <section className="content-panel">
-        <div className="hero-player">
+        <div className="hero-player" style={{ display: activeCollection !== 'search' && displaySongs.length > 0 ? undefined : 'none' }}>
           <div className="hero-copy">
             <p>{current ? "NOW PLAYING" : "GET STARTED"}</p>
             <h2>{current?.title || "Discover New Music"}</h2>
             <span>{current?.artist || "Pulseify uses advanced recommendations to build the perfect queue for you."}</span>
           </div>
         </div>
+
+        {activeCollection === 'search' && results.length === 0 && !loading && (
+          <div className="hero-player">
+            <div className="hero-copy">
+              <h2>Search for music</h2>
+              <span>Find your favorite songs, artists, and albums.</span>
+            </div>
+          </div>
+        )}
 
         <div className="track-grid">
           {displaySongs.map((song) => (
