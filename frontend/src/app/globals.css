@@ -69,6 +69,7 @@ button {
   height: 100vh;
   padding: 16px;
   isolation: isolate;
+  transition: grid-template-columns 0.3s ease;
 }
 
 .app-header {
@@ -76,54 +77,125 @@ button {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   align-items: center;
-  gap: 24px;
-  padding: 12px 20px;
+  gap: 16px;
+  padding: 12px 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   backdrop-filter: blur(var(--blur));
   box-shadow: var(--shadow);
+  z-index: 50;
 }
 
 .mobile-player-bar {
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .app-shell {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: 240px minmax(0, 1fr) 320px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+  .app-header {
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+  .right-rail {
+    display: none;
+  }
+  .nav-link span {
+    display: none;
+  }
+  .nav-link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .brand-mark h1, .brand-mark p {
+    display: none;
+  }
+  .brand-mark {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    display: block;
     padding: 0;
-    gap: 0;
+    margin: 0;
     height: 100dvh;
-    overflow: hidden;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .app-header {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    position: sticky;
+    top: 0;
     border-radius: 0;
-    border-top: 0;
-    border-left: 0;
-    border-right: 0;
-    padding: 12px 16px;
-    gap: 12px;
-    background: rgba(5, 6, 8, 0.8);
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 16px;
+    background: rgba(5, 6, 8, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 100;
   }
 
   .brand-mark {
-    justify-content: space-between;
+    display: none;
   }
 
-  .brand-mark p {
-    display: none;
+  .app-header {
+    display: block;
   }
 
   .search-row {
     max-width: none;
+    background: var(--surface-2);
+    border-radius: 12px;
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+    gap: 0;
+  }
+
+  .search-row input {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    height: 50px;
+  }
+
+  .search-row button {
+    border-radius: 0;
+    height: 50px;
+  }
+
+  .content-panel {
+    min-height: calc(100dvh - 200px);
+    margin-bottom: 140px;
+    border-radius: 0;
+    border: none;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-player {
+    padding: 80px 20px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-hero {
+    min-height: 400px;
   }
 
   .side-nav {
@@ -132,31 +204,32 @@ button {
     left: 0;
     right: 0;
     height: 70px;
-    z-index: 50;
     flex-direction: row !important;
-    justify-content: space-around;
-    padding: 0 12px !important;
+    z-index: 100;
     border-radius: 0;
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 0;
+    border: none;
     border-top: 1px solid var(--line);
+    padding: 0;
+    background: rgba(5, 6, 8, 0.98);
+    backdrop-filter: blur(20px);
   }
 
   .nav-stack {
     flex-direction: row !important;
     width: 100%;
+    height: 100%;
     justify-content: space-around;
-    gap: 4px !important;
   }
 
   .nav-link {
     flex-direction: column;
-    gap: 4px !important;
-    padding: 8px 4px !important;
-    font-size: 10px !important;
+    gap: 4px;
+    font-size: 11px;
+    padding: 0;
+    height: 100%;
+    justify-content: center;
     flex: 1;
-    text-align: center;
+    border-radius: 0;
   }
 
   .nav-link span {
@@ -164,46 +237,74 @@ button {
   }
 
   .nav-footer {
-    display: none !important;
-  }
-
-  .content-panel {
-    margin-bottom: 70px;
-    border-radius: 0;
-    border: 0;
-  }
-
-  .hero-player {
-    padding: 40px 20px !important;
-    min-height: 200px;
-    display: flex;
-    align-items: flex-end;
+    display: none;
   }
 
   .track-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    padding: 12px !important;
-    gap: 12px !important;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    padding: 16px;
+    gap: 16px;
   }
-  
+
   .track-card {
-    padding: 12px !important;
+    padding: 10px;
+    background: var(--surface-2);
+  }
+
+  .track-card img {
+    margin-bottom: 8px;
+  }
+
+  .track-card span {
+    font-size: 14px;
+  }
+
+  .track-card small {
+    font-size: 12px;
   }
 
   .mobile-player-bar {
     position: fixed;
-    bottom: 70px;
-    left: 0;
-    right: 0;
-    background: var(--surface);
-    backdrop-filter: blur(var(--blur));
-    border-top: 1px solid var(--line-strong);
-    border-radius: 0;
-    padding: 8px 16px;
+    bottom: 78px;
+    left: 8px;
+    right: 8px;
+    background: var(--accent);
+    background: linear-gradient(90deg, var(--accent) 0%, #7e22ce 100%);
+    border-radius: 12px;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 45;
+    z-index: 90;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+
+  .mobile-player-bar .list-item-info strong {
+    color: white;
+  }
+
+  .mobile-player-bar .list-item-info small {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .mobile-player-bar button {
+    color: white;
+  }
+}
+
+@media (max-width: 480px) {
+  .track-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .track-card {
+    padding: 8px;
+  }
+  
+  .hero-copy h2 {
+    font-size: 36px;
   }
 }
 
@@ -263,7 +364,7 @@ button {
 .search-row {
   display: flex;
   gap: 12px;
-  max-width: 600px;
+  width: 100%;
 }
 
 @media (max-width: 640px) {
@@ -368,12 +469,41 @@ button {
   padding: 0;
   background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.content-panel.is-empty {
+  overflow: hidden !important;
+  margin-bottom: 0 !important;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-player {
   padding: 40px;
   background: linear-gradient(180deg, var(--accent-glow) 0%, transparent 100%);
   border-bottom: 1px solid var(--line);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: none !important;
+  min-height: auto !important;
+  width: 100%;
+}
+
+.hero-copy {
+  width: 100%;
+  max-width: none;
+  text-align: center;
 }
 
 .hero-copy h2 {
@@ -387,9 +517,9 @@ button {
 .hero-copy span {
   display: block;
   margin-top: 16px;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--muted);
-  max-width: 600px;
+  width: 100%;
 }
 
 .track-grid {
@@ -462,16 +592,27 @@ button {
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
+.now-playing div {
+  flex: 1;
+  min-width: 0;
+}
+
 .now-playing h3 {
   margin: 0;
   font-size: 18px;
   font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .now-playing p {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .progress-area {
@@ -522,34 +663,6 @@ button {
 
 .play-button:hover {
   transform: scale(1.05);
-}
-
-.visualizer {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.visualizer-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 100%;
-  width: 100%;
-  padding: 0 40px;
-}
-
-.visualizer-bars span {
-  flex: 1;
-  background: linear-gradient(to top, var(--accent), transparent);
-  border-radius: 2px 2px 0 0;
-  opacity: 0.15;
-  transition: height 0.1s ease;
 }
 
 .fullscreen-player {
@@ -636,6 +749,11 @@ button {
   border-radius: 4px;
 }
 
+.list-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .list-item-info strong {
   display: block;
   font-size: 14px;
@@ -645,8 +763,12 @@ button {
 }
 
 .list-item-info small {
+  display: block;
   color: var(--muted);
   font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Scrollbar Styling */

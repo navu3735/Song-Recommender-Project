@@ -64,27 +64,6 @@ const stringToHue = (str: string) => {
   return Math.abs(hash % 360);
 };
 
-function Visualizer({ isPlaying }: { isPlaying: boolean }) {
-  const bars = Array.from({ length: 40 }, (_, i) => i);
-  
-  return (
-    <div className="visualizer" aria-hidden="true">
-      <div className="visualizer-bars">
-        {bars.map((bar) => (
-          <span
-            key={bar}
-            style={{
-              height: isPlaying ? `${Math.random() * 80 + 20}%` : "10%",
-              transition: "height 0.15s ease-in-out",
-              opacity: 0.1 + (bar / 40) * 0.2
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export function SongDiscoveryApp() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Song[]>([]);
@@ -280,7 +259,6 @@ export function SongDiscoveryApp() {
 
   return (
     <main className="app-shell">
-      <Visualizer isPlaying={isPlaying} />
       
       <header className="app-header">
         <div className="brand-mark">
@@ -337,7 +315,7 @@ export function SongDiscoveryApp() {
         </div>
       </nav>
 
-      <section className="content-panel">
+      <section className={`content-panel ${activeCollection === 'search' && results.length === 0 ? 'is-empty' : ''}`}>
         <div className="hero-player" style={{ display: activeCollection !== 'search' && displaySongs.length > 0 ? undefined : 'none' }}>
           <div className="hero-copy">
             <p>{current ? "NOW PLAYING" : "GET STARTED"}</p>
@@ -347,7 +325,7 @@ export function SongDiscoveryApp() {
         </div>
 
         {activeCollection === 'search' && results.length === 0 && !loading && (
-          <div className="hero-player">
+          <div className="hero-player search-hero">
             <div className="hero-copy">
               <h2>Search for music</h2>
               <span>Find your favorite songs, artists, and albums.</span>
